@@ -36,29 +36,47 @@ $query_args = array(
 	'no_found_rows'  => true,
 );
 
+// Exclude events marked as "Hide From Event Listings".
+$hide_from_listings_clause = array(
+	'relation' => 'OR',
+	array(
+		'key'     => '_EventHideFromUpcoming',
+		'compare' => 'NOT EXISTS',
+	),
+	array(
+		'key'     => '_EventHideFromUpcoming',
+		'value'   => 'yes',
+		'compare' => '!=',
+	),
+);
+
 if ( 'upcoming' === $event_order ) {
 	$query_args['meta_key']  = '_EventStartDate';
 	$query_args['orderby']   = 'meta_value';
 	$query_args['order']     = 'ASC';
 	$query_args['meta_query'] = array(
+		'relation' => 'AND',
 		array(
 			'key'     => '_EventStartDate',
 			'value'   => $now,
 			'compare' => '>=',
 			'type'    => 'DATETIME',
 		),
+		$hide_from_listings_clause,
 	);
 } else {
 	$query_args['meta_key']  = '_EventStartDate';
 	$query_args['orderby']   = 'meta_value';
 	$query_args['order']     = 'DESC';
 	$query_args['meta_query'] = array(
+		'relation' => 'AND',
 		array(
 			'key'     => '_EventStartDate',
 			'value'   => $now,
 			'compare' => '<',
 			'type'    => 'DATETIME',
 		),
+		$hide_from_listings_clause,
 	);
 }
 
@@ -110,8 +128,10 @@ $wrapper_attributes = get_block_wrapper_attributes( array(
 
 					$formatted_date = '';
 					if ( $start_date ) {
-						$timestamp      = strtotime( $start_date );
-						$formatted_date = wp_date( 'M j, Y', $timestamp );
+						$event_datetime = date_create( $start_date, new DateTimeZone( 'UTC' ) );
+						if ( $event_datetime ) {
+							$formatted_date = date_format( $event_datetime, 'M j, Y' );
+						}
 					}
 
 					$excerpt = get_the_excerpt( $event_id );
