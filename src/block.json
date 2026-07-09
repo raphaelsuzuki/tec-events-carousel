@@ -1,0 +1,57 @@
+
+  {
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "telex/block-telex-events-carousel",
+	"version": "0.1.0",
+	"title": "Events Calendar Carousel",
+	"category": "widgets",
+	"icon": "calendar-alt",
+	"description": "A Netflix-inspired carousel block that displays events from The Events Calendar plugin with smooth animations and hover effects.",
+	"example": {},
+	"attributes": {
+		"numberOfEvents": {
+			"type": "number",
+			"default": 8
+		},
+		"eventOrder": {
+			"type": "string",
+			"default": "upcoming"
+		},
+		"showDate": {
+			"type": "boolean",
+			"default": true
+		},
+		"showVenue": {
+			"type": "boolean",
+			"default": true
+		},
+		"showExcerpt": {
+			"type": "boolean",
+			"default": true
+		},
+		"accentColor": {
+			"type": "string",
+			"default": "#e50914"
+		},
+		"sectionTitle": {
+			"type": "string",
+			"default": "Upcoming Events"
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"textdomain": "telex-events-carousel",
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js",
+	"render": "file:./render.php"
+}
+  

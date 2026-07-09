@@ -1,0 +1,380 @@
+
+.wp-block-telex-block-telex-events-carousel {
+	--tec-accent: #e50914;
+	--tec-bg: #141414;
+	--tec-card-bg: #1a1a1a;
+	--tec-text: #ffffff;
+	--tec-text-muted: #b3b3b3;
+	--tec-card-radius: 6px;
+	--tec-transition: 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+	position: relative;
+	background-color: var(--tec-bg);
+	padding: 2.5rem 0;
+	overflow: hidden;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+		Ubuntu, Cantarell, sans-serif;
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	.telex-events-carousel__title {
+		color: var(--tec-text);
+		font-size: 1.5rem;
+		font-weight: 700;
+		margin: 0 0 1.25rem 3.5rem;
+		letter-spacing: -0.01em;
+	}
+
+	.telex-events-carousel__notice,
+	.telex-events-carousel__loading {
+		text-align: center;
+		padding: 3rem 2rem;
+
+		p {
+			color: var(--tec-text-muted);
+			font-size: 0.95rem;
+			margin: 0;
+		}
+	}
+
+	.telex-events-carousel__track-wrapper {
+		position: relative;
+		padding: 0 3.5rem;
+	}
+
+	.telex-events-carousel__track {
+		display: flex;
+		gap: 1.25rem;
+		overflow-x: auto;
+		scroll-behavior: smooth;
+		scroll-snap-type: x mandatory;
+		-webkit-overflow-scrolling: touch;
+		padding: 1.5rem 0;
+		scrollbar-width: none;
+
+		&::-webkit-scrollbar {
+			display: none;
+		}
+	}
+
+	/* Card base */
+	.telex-events-carousel__card {
+		flex: 0 0 11.25rem;
+		min-width: 9rem;
+		scroll-snap-align: start;
+		transition: transform var(--tec-transition), z-index 0s;
+		position: relative;
+		z-index: 1;
+		text-decoration: none;
+		color: inherit;
+		display: block;
+	}
+
+	/* Card image container */
+	.telex-events-carousel__card-image {
+		position: relative;
+		width: 11.25rem;
+		height: 15.75rem;
+		border-radius: var(--tec-card-radius);
+		overflow: hidden;
+		background-color: var(--tec-card-bg);
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			display: block;
+			transition: filter var(--tec-transition);
+		}
+	}
+
+	.telex-events-carousel__card-placeholder {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+		font-size: 2rem;
+		transition: background var(--tec-transition);
+	}
+
+	/* Overlay – hidden by default */
+	.telex-events-carousel__card-overlay {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 0.75rem;
+		background: rgba(0, 0, 0, 0.75);
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		opacity: 0;
+		transform: translateY(8px);
+		transition: opacity var(--tec-transition),
+			transform var(--tec-transition);
+		pointer-events: none;
+	}
+
+	/* ===== Desktop hover effects (explicit selectors, no SCSS &) ===== */
+	.telex-events-carousel__card:hover {
+		transform: scale(1.35);
+		z-index: 10;
+		transition-delay: 0.3s;
+	}
+
+	.telex-events-carousel__card:hover .telex-events-carousel__card-image img {
+		filter: brightness(0.4);
+		transition-delay: 0.3s;
+	}
+
+	.telex-events-carousel__card:hover .telex-events-carousel__card-placeholder {
+		background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
+	}
+
+	.telex-events-carousel__card:hover .telex-events-carousel__card-overlay {
+		opacity: 1;
+		transform: translateY(0);
+		transition-delay: 0.35s;
+		pointer-events: auto;
+	}
+
+	/* Overlay content */
+	.telex-events-carousel__card-date {
+		display: inline-block;
+		background-color: var(--tec-accent);
+		color: var(--tec-text);
+		font-size: 0.65rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		padding: 0.15rem 0.4rem;
+		border-radius: 3px;
+		margin-bottom: 0.35rem;
+	}
+
+	.telex-events-carousel__card-name {
+		color: var(--tec-text);
+		font-size: 0.85rem;
+		font-weight: 600;
+		margin: 0 0 0.2rem;
+		line-height: 1.25;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.telex-events-carousel__card-venue {
+		color: var(--tec-text-muted);
+		font-size: 0.65rem;
+		margin-bottom: 0.2rem;
+	}
+
+	.telex-events-carousel__card-excerpt {
+		color: var(--tec-text-muted);
+		font-size: 0.65rem;
+		line-height: 1.4;
+		margin: 0;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	/* Navigation arrows */
+	.telex-events-carousel__nav {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 3rem;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: transparent;
+		border: none;
+		color: var(--tec-text);
+		font-size: 1.75rem;
+		cursor: pointer;
+		z-index: 20;
+		opacity: 0;
+		transition: opacity 0.2s ease, background-color 0.2s ease;
+
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: rgba(0, 0, 0, 0.5);
+			opacity: 0;
+			transition: opacity 0.2s ease;
+		}
+
+		&:hover::before {
+			opacity: 1;
+		}
+
+		span {
+			position: relative;
+			z-index: 1;
+		}
+	}
+
+	&:hover .telex-events-carousel__nav {
+		opacity: 1;
+	}
+
+	.telex-events-carousel__nav--left {
+		left: 0;
+		border-radius: 0 var(--tec-card-radius) var(--tec-card-radius) 0;
+	}
+
+	.telex-events-carousel__nav--right {
+		right: 0;
+		border-radius: var(--tec-card-radius) 0 0 var(--tec-card-radius);
+	}
+
+	/* Gradient edges */
+	.telex-events-carousel__track-wrapper::before,
+	.telex-events-carousel__track-wrapper::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 3.5rem;
+		z-index: 15;
+		pointer-events: none;
+	}
+
+	.telex-events-carousel__track-wrapper::before {
+		left: 0;
+		background: linear-gradient(to right, var(--tec-bg), transparent);
+	}
+
+	.telex-events-carousel__track-wrapper::after {
+		right: 0;
+		background: linear-gradient(to left, var(--tec-bg), transparent);
+	}
+
+	/* Responsive */
+	@media (max-width: 900px) {
+		.telex-events-carousel__title {
+			margin-left: 1.5rem;
+		}
+
+		.telex-events-carousel__track-wrapper {
+			padding: 0 1.5rem;
+		}
+	}
+
+	/* Touch devices: persistent mini-overlay + tap-to-reveal */
+	@media (hover: none) and (pointer: coarse) {
+		.telex-events-carousel__card:hover {
+			transform: none;
+			z-index: 1;
+		}
+
+		.telex-events-carousel__card:hover .telex-events-carousel__card-image img {
+			filter: none;
+		}
+
+		.telex-events-carousel__card:hover .telex-events-carousel__card-overlay {
+			opacity: 0;
+			transform: translateY(8px);
+		}
+
+		.telex-events-carousel__card.is-tapped {
+			transform: scale(1.25);
+			z-index: 10;
+		}
+
+		.telex-events-carousel__card.is-tapped .telex-events-carousel__card-image img {
+			filter: brightness(0.4);
+		}
+
+		/* Always show a compact bottom gradient with title */
+		.telex-events-carousel__card-overlay {
+			top: auto;
+			bottom: 0;
+			padding: 0.5rem 0.6rem;
+			background: linear-gradient(
+				to top,
+				rgba(0, 0, 0, 0.85) 0%,
+				transparent 100%
+			);
+			opacity: 1;
+			transform: translateY(0);
+			pointer-events: auto;
+		}
+
+		.telex-events-carousel__card-overlay .telex-events-carousel__card-name {
+			-webkit-line-clamp: 1;
+		}
+
+		.telex-events-carousel__card-overlay .telex-events-carousel__card-excerpt,
+		.telex-events-carousel__card-overlay .telex-events-carousel__card-venue {
+			display: none;
+		}
+
+		/* When tapped: full overlay with all details */
+		.telex-events-carousel__card.is-tapped .telex-events-carousel__card-overlay {
+			top: 0;
+			padding: 0.75rem;
+			background: rgba(0, 0, 0, 0.75);
+			opacity: 1;
+			transform: translateY(0);
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+		}
+
+		.telex-events-carousel__card.is-tapped .telex-events-carousel__card-overlay .telex-events-carousel__card-name {
+			-webkit-line-clamp: 2;
+		}
+
+		.telex-events-carousel__card.is-tapped .telex-events-carousel__card-overlay .telex-events-carousel__card-excerpt,
+		.telex-events-carousel__card.is-tapped .telex-events-carousel__card-overlay .telex-events-carousel__card-venue {
+			display: block;
+		}
+
+		/* Navigation arrows always visible on touch */
+		.telex-events-carousel__nav {
+			opacity: 1;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.telex-events-carousel__card {
+			flex: 0 0 9rem;
+			min-width: 8rem;
+		}
+
+		.telex-events-carousel__card-image {
+			width: 9rem;
+			height: 12.6rem;
+		}
+
+		.telex-events-carousel__title {
+			margin-left: 1rem;
+			font-size: 1.2rem;
+		}
+
+		.telex-events-carousel__track-wrapper {
+			padding: 0 1rem;
+		}
+
+		.telex-events-carousel__nav {
+			width: 2rem;
+			font-size: 1.25rem;
+		}
+	}
+}
