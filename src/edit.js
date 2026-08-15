@@ -8,9 +8,11 @@ import {
 	SelectControl,
 	TextControl,
 	ColorPicker,
+	FormTokenField,
+	Spinner,
 } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
-import { useState, useEffect } from '@wordpress/element';
+import { useState, useEffect, useMemo } from '@wordpress/element';
 import './editor.scss';
 
 export default function Edit( { attributes, setAttributes } ) {
@@ -22,9 +24,74 @@ export default function Edit( { attributes, setAttributes } ) {
 		showExcerpt,
 		accentColor,
 		sectionTitle,
+		eventCategories,
+		eventTags,
 	} = attributes;
 
 	const [ tribeActive, setTribeActive ] = useState( true );
+
+	// Fetch available event categories.
+	const eventCategoryTerms = useSelect( ( select ) => {
+		return select( 'core' ).getEntityRecords( 'taxonomy', 'tribe_events_cat', {
+			per_page: 100,
+			orderby: 'name',
+			order: 'asc',
+		} );
+	}, [] );
+
+	// Fetch available tags.
+	const tagTerms = useSelect( ( select ) => {
+		return select( 'core' ).getEntityRecords( 'taxonomy', 'post_tag', {
+			per_page: 100,
+			orderby: 'name',
+			order: 'asc',
+		} );
+	}, [] );
+
+	// Build lookup maps for token fields.
+	const categoryMap = useMemo( () => {
+		if ( ! eventCategoryTerms ) return {};
+		const map = {};
+		eventCategoryTerms.forEach( ( t ) => {
+			map[ t.id ] = t.name;
+		} );
+		return map;
+	}, [ eventCategoryTerms ] );
+
+	const tagMap = useMemo( () => {
+		if ( ! tagTerms ) return {};
+		const map = {};
+		tagTerms.forEach( ( t ) => {
+			map[ t.id ] = t.name;
+		} );
+		return map;
+	}, [ tagTerms ] );
+
+	const categoryNames = useMemo(
+		() => ( eventCategoryTerms || [] ).map( ( t ) => t.name ),
+		[ eventCategoryTerms ]
+	);
+
+	const tagNames = useMemo(
+		() => ( tagTerms || [] ).map( ( t ) => t.name ),
+		[ tagTerms ]
+	);
+
+	const selectedCategoryNames = useMemo(
+		() =>
+			( eventCategories || [] )
+				.map( ( id ) => categoryMap[ id ] )
+				.filter( Boolean ),
+		[ eventCategories, categoryMap ]
+	);
+
+	const selectedTagNames = useMemo(
+		() =>
+			( eventTags || [] )
+				.map( ( id ) => tagMap[ id ] )
+				.filter( Boolean ),
+		[ eventTags, tagMap ]
+	);
 
 	const events = useSelect(
 		( select ) => {
@@ -43,10 +110,18 @@ export default function Edit( { attributes, setAttributes } ) {
 				query.order = 'desc';
 			}
 
+			if ( eventCategories && eventCategories.length > 0 ) {
+				query.tribe_events_cat = eventCategories;
+			}
+
+			if ( eventTags && eventTags.length > 0 ) {
+				query.tags = eventTags;
+			}
+
 			const records = getEntityRecords( 'postType', 'tribe_events', query );
 			return records;
 		},
-		[ numberOfEvents, eventOrder ]
+		[ numberOfEvents, eventOrder, eventCategories, eventTags ]
 	);
 
 	useEffect( () => {
@@ -147,6 +222,71 @@ export default function Edit( { attributes, setAttributes } ) {
 							setAttributes( { eventOrder: value } )
 						}
 					/>
+				</PanelBody>
+				<PanelBody
+					title={ __( 'Filter by Taxonomy', 'telex-events-carousel' ) }
+					initialOpen={ false }
+				>
+					{ eventCategoryTerms === null || eventCategoryTerms === undefined ? (
+						<p style={ { display: 'flex', alignItems: 'center', gap: '8px' } }>
+							<Spinner />
+							{ __( 'Loading categories…', 'telex-events-carousel' ) }
+						</p>
+					) : eventCategoryTerms.length === 0 ? (
+						<p style={ { color: '#757575', fontStyle: 'italic' } }>
+							{ __( 'No event categories found.', 'telex-events-carousel' ) }
+						</p>
+					) : (
+						<FormTokenField
+							__nextHasNoMarginBottom
+							__next40pxDefaultSize
+							label={ __( 'Event Categories', 'telex-events-carousel' ) }
+							value={ selectedCategoryNames }
+							suggestions={ categoryNames }
+							onChange={ ( tokens ) => {
+								const ids = tokens
+									.map( ( name ) => {
+										const term = ( eventCategoryTerms || [] ).find(
+											( t ) => t.name.toLowerCase() === name.toLowerCase()
+										);
+										return term ? term.id : null;
+									} )
+									.filter( Boolean );
+								setAttributes( { eventCategories: ids } );
+							} }
+							__experimentalExpandOnFocus
+						/>
+					) }
+					{ tagTerms === null || tagTerms === undefined ? (
+						<p style={ { display: 'flex', alignItems: 'center', gap: '8px' } }>
+							<Spinner />
+							{ __( 'Loading tags…', 'telex-events-carousel' ) }
+						</p>
+					) : tagTerms.length === 0 ? (
+						<p style={ { color: '#757575', fontStyle: 'italic' } }>
+							{ __( 'No tags found.', 'telex-events-carousel' ) }
+						</p>
+					) : (
+						<FormTokenField
+							__nextHasNoMarginBottom
+							__next40pxDefaultSize
+							label={ __( 'Event Tags', 'telex-events-carousel' ) }
+							value={ selectedTagNames }
+							suggestions={ tagNames }
+							onChange={ ( tokens ) => {
+								const ids = tokens
+									.map( ( name ) => {
+										const term = ( tagTerms || [] ).find(
+											( t ) => t.name.toLowerCase() === name.toLowerCase()
+										);
+										return term ? term.id : null;
+									} )
+									.filter( Boolean );
+								setAttributes( { eventTags: ids } );
+							} }
+							__experimentalExpandOnFocus
+						/>
+					) }
 				</PanelBody>
 				<PanelBody
 					title={ __( 'Display Options', 'telex-events-carousel' ) }

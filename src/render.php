@@ -16,6 +16,8 @@ $show_venue       = isset( $attributes['showVenue'] ) ? (bool) $attributes['show
 $show_excerpt     = isset( $attributes['showExcerpt'] ) ? (bool) $attributes['showExcerpt'] : true;
 $accent_color     = isset( $attributes['accentColor'] ) ? sanitize_hex_color( $attributes['accentColor'] ) : '#e50914';
 $section_title    = isset( $attributes['sectionTitle'] ) ? sanitize_text_field( $attributes['sectionTitle'] ) : '';
+$event_categories = ! empty( $attributes['eventCategories'] ) ? array_map( 'absint', (array) $attributes['eventCategories'] ) : array();
+$event_tags       = ! empty( $attributes['eventTags'] ) ? array_map( 'absint', (array) $attributes['eventTags'] ) : array();
 
 // Check if The Events Calendar is active.
 if ( ! post_type_exists( 'tribe_events' ) ) {
@@ -35,6 +37,33 @@ $query_args = array(
 	'posts_per_page' => $number_of_events,
 	'no_found_rows'  => true,
 );
+
+// Taxonomy filtering.
+$tax_query = array();
+
+if ( ! empty( $event_categories ) ) {
+	$tax_query[] = array(
+		'taxonomy' => 'tribe_events_cat',
+		'field'    => 'term_id',
+		'terms'    => $event_categories,
+	);
+}
+
+if ( ! empty( $event_tags ) ) {
+	$tax_query[] = array(
+		'taxonomy' => 'post_tag',
+		'field'    => 'term_id',
+		'terms'    => $event_tags,
+	);
+}
+
+if ( count( $tax_query ) > 1 ) {
+	$tax_query['relation'] = 'AND';
+}
+
+if ( ! empty( $tax_query ) ) {
+	$query_args['tax_query'] = $tax_query;
+}
 
 // Exclude events marked as "Hide From Event Listings".
 $hide_from_listings_clause = array(

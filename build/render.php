@@ -16,6 +16,8 @@ $show_venue       = isset( $attributes['showVenue'] ) ? (bool) $attributes['show
 $show_excerpt     = isset( $attributes['showExcerpt'] ) ? (bool) $attributes['showExcerpt'] : true;
 $accent_color     = isset( $attributes['accentColor'] ) ? sanitize_hex_color( $attributes['accentColor'] ) : '#e50914';
 $section_title    = isset( $attributes['sectionTitle'] ) ? sanitize_text_field( $attributes['sectionTitle'] ) : '';
+$event_categories = ! empty( $attributes['eventCategories'] ) ? array_map( 'absint', (array) $attributes['eventCategories'] ) : array();
+$event_tags       = ! empty( $attributes['eventTags'] ) ? array_map( 'absint', (array) $attributes['eventTags'] ) : array();
 
 // Check if The Events Calendar is active.
 if ( ! post_type_exists( 'tribe_events' ) ) {
@@ -36,29 +38,74 @@ $query_args = array(
 	'no_found_rows'  => true,
 );
 
+// Taxonomy filtering.
+$tax_query = array();
+
+if ( ! empty( $event_categories ) ) {
+	$tax_query[] = array(
+		'taxonomy' => 'tribe_events_cat',
+		'field'    => 'term_id',
+		'terms'    => $event_categories,
+	);
+}
+
+if ( ! empty( $event_tags ) ) {
+	$tax_query[] = array(
+		'taxonomy' => 'post_tag',
+		'field'    => 'term_id',
+		'terms'    => $event_tags,
+	);
+}
+
+if ( count( $tax_query ) > 1 ) {
+	$tax_query['relation'] = 'AND';
+}
+
+if ( ! empty( $tax_query ) ) {
+	$query_args['tax_query'] = $tax_query;
+}
+
+// Exclude events marked as "Hide From Event Listings".
+$hide_from_listings_clause = array(
+	'relation' => 'OR',
+	array(
+		'key'     => '_EventHideFromUpcoming',
+		'compare' => 'NOT EXISTS',
+	),
+	array(
+		'key'     => '_EventHideFromUpcoming',
+		'value'   => 'yes',
+		'compare' => '!=',
+	),
+);
+
 if ( 'upcoming' === $event_order ) {
 	$query_args['meta_key']  = '_EventStartDate';
 	$query_args['orderby']   = 'meta_value';
 	$query_args['order']     = 'ASC';
 	$query_args['meta_query'] = array(
+		'relation' => 'AND',
 		array(
 			'key'     => '_EventStartDate',
 			'value'   => $now,
 			'compare' => '>=',
 			'type'    => 'DATETIME',
 		),
+		$hide_from_listings_clause,
 	);
 } else {
 	$query_args['meta_key']  = '_EventStartDate';
 	$query_args['orderby']   = 'meta_value';
 	$query_args['order']     = 'DESC';
 	$query_args['meta_query'] = array(
+		'relation' => 'AND',
 		array(
 			'key'     => '_EventStartDate',
 			'value'   => $now,
 			'compare' => '<',
 			'type'    => 'DATETIME',
 		),
+		$hide_from_listings_clause,
 	);
 }
 
@@ -110,8 +157,10 @@ $wrapper_attributes = get_block_wrapper_attributes( array(
 
 					$formatted_date = '';
 					if ( $start_date ) {
-						$timestamp      = strtotime( $start_date );
-						$formatted_date = wp_date( 'M j, Y', $timestamp );
+						$event_datetime = date_create( $start_date, new DateTimeZone( 'UTC' ) );
+						if ( $event_datetime ) {
+							$formatted_date = date_format( $event_datetime, 'M j, Y' );
+						}
 					}
 
 					$excerpt = get_the_excerpt( $event_id );

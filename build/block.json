@@ -33,6 +33,20 @@
       "type": "string",
       "default": "#e50914"
     },
+    "eventCategories": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "number"
+      }
+    },
+    "eventTags": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "number"
+      }
+    },
     "sectionTitle": {
       "type": "string",
       "default": "Upcoming Events"
