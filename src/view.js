@@ -1,7 +1,7 @@
 
 document.addEventListener( 'DOMContentLoaded', () => {
 	const carousels = document.querySelectorAll(
-		'.wp-block-telex-block-telex-events-carousel'
+		'.wp-block-tec-events-carousel-carousel'
 	);
 
 	const isTouchDevice =
@@ -9,13 +9,13 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 	carousels.forEach( ( carousel ) => {
 		const track = carousel.querySelector(
-			'.telex-events-carousel__track'
+			'.tec-events-carousel__track'
 		);
 		const leftBtn = carousel.querySelector(
-			'.telex-events-carousel__nav--left'
+			'.tec-events-carousel__nav--left'
 		);
 		const rightBtn = carousel.querySelector(
-			'.telex-events-carousel__nav--right'
+			'.tec-events-carousel__nav--right'
 		);
 
 		if ( ! track ) {
@@ -25,7 +25,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 		// Touch: tap a card to reveal full overlay; tap again to navigate.
 		if ( isTouchDevice ) {
 			const cards = track.querySelectorAll(
-				'.telex-events-carousel__card'
+				'.tec-events-carousel__card'
 			);
 
 			cards.forEach( ( card ) => {
@@ -44,7 +44,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 			// Dismiss tapped state when tapping outside any card.
 			document.addEventListener( 'click', ( e ) => {
-				if ( ! e.target.closest( '.telex-events-carousel__card' ) ) {
+				if ( ! e.target.closest( '.tec-events-carousel__card' ) ) {
 					cards.forEach( ( c ) =>
 						c.classList.remove( 'is-tapped' )
 					);
@@ -54,7 +54,7 @@ document.addEventListener( 'DOMContentLoaded', () => {
 
 		const getScrollAmount = () => {
 			const card = track.querySelector(
-				'.telex-events-carousel__card'
+				'.tec-events-carousel__card'
 			);
 			if ( ! card ) {
 				return 300;

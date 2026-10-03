@@ -1,9 +1,9 @@
 === Events Calendar Carousel ===
 
-Contributors:      WordPress Telex
+Contributors:      WordPress
 Tags:              block, events, carousel, the events calendar, netflix
 Tested up to:      6.8
-Stable tag:        0.1.0
+Stable tag:        0.1.1
 License:           GPLv2 or later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -28,7 +28,7 @@ Events Calendar Carousel brings a cinematic, Netflix-style browsing experience t
 == Installation ==
 
 1. Make sure The Events Calendar plugin is installed and activated.
-2. Upload the plugin files to `/wp-content/plugins/telex-events-carousel` or install via the WordPress plugins screen.
+2. Upload the plugin files to `/wp-content/plugins/tec-events-carousel` or install via the WordPress plugins screen.
 3. Activate the plugin through the 'Plugins' screen in WordPress.
 4. Add the "Events Calendar Carousel" block to any post or page via the block editor.
 

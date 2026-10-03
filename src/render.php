@@ -22,9 +22,9 @@ $event_tags       = ! empty( $attributes['eventTags'] ) ? array_map( 'absint', (
 // Check if The Events Calendar is active.
 if ( ! post_type_exists( 'tribe_events' ) ) {
 	printf(
-		'<div %s><div class="telex-events-carousel__notice"><p>%s</p></div></div>',
+		'<div %s><div class="tec-events-carousel__notice"><p>%s</p></div></div>',
 		get_block_wrapper_attributes( array( 'style' => '--tec-accent:' . esc_attr( $accent_color ) ) ),
-		esc_html__( 'The Events Calendar plugin is required to display events.', 'telex-events-carousel' )
+		esc_html__( 'The Events Calendar plugin is required to display events.', 'tec-events-carousel' )
 	);
 	return;
 }
@@ -115,25 +115,25 @@ $wrapper_attributes = get_block_wrapper_attributes( array(
 	'style' => '--tec-accent:' . esc_attr( $accent_color ),
 ) );
 ?>
-<div <?php echo $wrapper_attributes; ?> tabindex="0" aria-label="<?php esc_attr_e( 'Events carousel', 'telex-events-carousel' ); ?>">
+<div <?php echo $wrapper_attributes; ?> tabindex="0" aria-label="<?php esc_attr_e( 'Events carousel', 'tec-events-carousel' ); ?>">
 	<?php if ( $section_title ) : ?>
-		<h2 class="telex-events-carousel__title"><?php echo esc_html( $section_title ); ?></h2>
+		<h2 class="tec-events-carousel__title"><?php echo esc_html( $section_title ); ?></h2>
 	<?php endif; ?>
 
 	<?php if ( ! $events_query->have_posts() ) : ?>
-		<div class="telex-events-carousel__notice">
-			<p><?php esc_html_e( 'No events found.', 'telex-events-carousel' ); ?></p>
+		<div class="tec-events-carousel__notice">
+			<p><?php esc_html_e( 'No events found.', 'tec-events-carousel' ); ?></p>
 		</div>
 	<?php else : ?>
-		<div class="telex-events-carousel__track-wrapper">
+		<div class="tec-events-carousel__track-wrapper">
 			<button
-				class="telex-events-carousel__nav telex-events-carousel__nav--left"
-				aria-label="<?php esc_attr_e( 'Scroll left', 'telex-events-carousel' ); ?>"
+				class="tec-events-carousel__nav tec-events-carousel__nav--left"
+				aria-label="<?php esc_attr_e( 'Scroll left', 'tec-events-carousel' ); ?>"
 				type="button"
 			>
 				<span>&#8249;</span>
 			</button>
-			<div class="telex-events-carousel__track">
+			<div class="tec-events-carousel__track">
 				<?php
 				while ( $events_query->have_posts() ) :
 					$events_query->the_post();
@@ -168,8 +168,8 @@ $wrapper_attributes = get_block_wrapper_attributes( array(
 						$excerpt = substr( $excerpt, 0, 100 ) . '…';
 					}
 					?>
-					<a href="<?php echo esc_url( $event_link ); ?>" class="telex-events-carousel__card" aria-label="<?php echo esc_attr( get_the_title( $event_id ) ); ?>">
-						<div class="telex-events-carousel__card-image">
+					<a href="<?php echo esc_url( $event_link ); ?>" class="tec-events-carousel__card" aria-label="<?php echo esc_attr( get_the_title( $event_id ) ); ?>">
+						<div class="tec-events-carousel__card-image">
 							<?php if ( $thumbnail_url ) : ?>
 								<img
 									src="<?php echo esc_url( $thumbnail_url ); ?>"
@@ -178,20 +178,20 @@ $wrapper_attributes = get_block_wrapper_attributes( array(
 									decoding="async"
 								/>
 							<?php else : ?>
-								<div class="telex-events-carousel__card-placeholder">
+								<div class="tec-events-carousel__card-placeholder">
 									<span>📅</span>
 								</div>
 							<?php endif; ?>
-							<div class="telex-events-carousel__card-overlay">
+							<div class="tec-events-carousel__card-overlay">
 								<?php if ( $show_date && $formatted_date ) : ?>
-									<span class="telex-events-carousel__card-date"><?php echo esc_html( $formatted_date ); ?></span>
+									<span class="tec-events-carousel__card-date"><?php echo esc_html( $formatted_date ); ?></span>
 								<?php endif; ?>
-								<h3 class="telex-events-carousel__card-name"><?php echo esc_html( get_the_title( $event_id ) ); ?></h3>
+								<h3 class="tec-events-carousel__card-name"><?php echo esc_html( get_the_title( $event_id ) ); ?></h3>
 								<?php if ( $show_venue && $venue_name ) : ?>
-									<span class="telex-events-carousel__card-venue">📍 <?php echo esc_html( $venue_name ); ?></span>
+									<span class="tec-events-carousel__card-venue">📍 <?php echo esc_html( $venue_name ); ?></span>
 								<?php endif; ?>
 								<?php if ( $show_excerpt && $excerpt ) : ?>
-									<p class="telex-events-carousel__card-excerpt"><?php echo esc_html( $excerpt ); ?></p>
+									<p class="tec-events-carousel__card-excerpt"><?php echo esc_html( $excerpt ); ?></p>
 								<?php endif; ?>
 							</div>
 						</div>
@@ -199,8 +199,8 @@ $wrapper_attributes = get_block_wrapper_attributes( array(
 				<?php endwhile; ?>
 			</div>
 			<button
-				class="telex-events-carousel__nav telex-events-carousel__nav--right"
-				aria-label="<?php esc_attr_e( 'Scroll right', 'telex-events-carousel' ); ?>"
+				class="tec-events-carousel__nav tec-events-carousel__nav--right"
+				aria-label="<?php esc_attr_e( 'Scroll right', 'tec-events-carousel' ); ?>"
 				type="button"
 			>
 				<span>&#8250;</span>

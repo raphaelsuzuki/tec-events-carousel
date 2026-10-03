@@ -1,5 +1,5 @@
 
-.wp-block-telex-block-telex-events-carousel {
+.wp-block-tec-events-carousel-carousel {
 	--tec-accent: #e50914;
 	--tec-bg: #141414;
 	--tec-card-bg: #1a1a1a;
@@ -21,7 +21,7 @@
 		box-sizing: border-box;
 	}
 
-	.telex-events-carousel__title {
+	.tec-events-carousel__title {
 		color: var(--tec-text);
 		font-size: 1.5rem;
 		font-weight: 700;
@@ -29,8 +29,8 @@
 		letter-spacing: -0.01em;
 	}
 
-	.telex-events-carousel__notice,
-	.telex-events-carousel__loading {
+	.tec-events-carousel__notice,
+	.tec-events-carousel__loading {
 		text-align: center;
 		padding: 3rem 2rem;
 
@@ -41,12 +41,12 @@
 		}
 	}
 
-	.telex-events-carousel__track-wrapper {
+	.tec-events-carousel__track-wrapper {
 		position: relative;
 		padding: 0 3.5rem;
 	}
 
-	.telex-events-carousel__track {
+	.tec-events-carousel__track {
 		display: flex;
 		gap: 1.25rem;
 		overflow-x: auto;
@@ -62,7 +62,7 @@
 	}
 
 	/* Card base */
-	.telex-events-carousel__card {
+	.tec-events-carousel__card {
 		flex: 0 0 11.25rem;
 		min-width: 9rem;
 		scroll-snap-align: start;
@@ -75,7 +75,7 @@
 	}
 
 	/* Card image container */
-	.telex-events-carousel__card-image {
+	.tec-events-carousel__card-image {
 		position: relative;
 		width: 11.25rem;
 		height: 15.75rem;
@@ -93,7 +93,7 @@
 		}
 	}
 
-	.telex-events-carousel__card-placeholder {
+	.tec-events-carousel__card-placeholder {
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -105,7 +105,7 @@
 	}
 
 	/* Overlay – hidden by default */
-	.telex-events-carousel__card-overlay {
+	.tec-events-carousel__card-overlay {
 		position: absolute;
 		top: 0;
 		bottom: 0;
@@ -126,22 +126,22 @@
 	}
 
 	/* ===== Desktop hover effects (explicit selectors, no SCSS &) ===== */
-	.telex-events-carousel__card:hover {
+	.tec-events-carousel__card:hover {
 		transform: scale(1.35);
 		z-index: 10;
 		transition-delay: 0.3s;
 	}
 
-	.telex-events-carousel__card:hover .telex-events-carousel__card-image img {
+	.tec-events-carousel__card:hover .tec-events-carousel__card-image img {
 		filter: brightness(0.4);
 		transition-delay: 0.3s;
 	}
 
-	.telex-events-carousel__card:hover .telex-events-carousel__card-placeholder {
+	.tec-events-carousel__card:hover .tec-events-carousel__card-placeholder {
 		background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
 	}
 
-	.telex-events-carousel__card:hover .telex-events-carousel__card-overlay {
+	.tec-events-carousel__card:hover .tec-events-carousel__card-overlay {
 		opacity: 1;
 		transform: translateY(0);
 		transition-delay: 0.35s;
@@ -149,7 +149,7 @@
 	}
 
 	/* Overlay content */
-	.telex-events-carousel__card-date {
+	.tec-events-carousel__card-date {
 		display: inline-block;
 		background-color: var(--tec-accent);
 		color: var(--tec-text);
@@ -162,7 +162,7 @@
 		margin-bottom: 0.35rem;
 	}
 
-	.telex-events-carousel__card-name {
+	.tec-events-carousel__card-name {
 		color: var(--tec-text);
 		font-size: 0.85rem;
 		font-weight: 600;
@@ -174,13 +174,13 @@
 		overflow: hidden;
 	}
 
-	.telex-events-carousel__card-venue {
+	.tec-events-carousel__card-venue {
 		color: var(--tec-text-muted);
 		font-size: 0.65rem;
 		margin-bottom: 0.2rem;
 	}
 
-	.telex-events-carousel__card-excerpt {
+	.tec-events-carousel__card-excerpt {
 		color: var(--tec-text-muted);
 		font-size: 0.65rem;
 		line-height: 1.4;
@@ -192,7 +192,7 @@
 	}
 
 	/* Navigation arrows */
-	.telex-events-carousel__nav {
+	.tec-events-carousel__nav {
 		position: absolute;
 		top: 50%;
 		transform: translateY(-50%);
@@ -229,23 +229,23 @@
 		}
 	}
 
-	&:hover .telex-events-carousel__nav {
+	&:hover .tec-events-carousel__nav {
 		opacity: 1;
 	}
 
-	.telex-events-carousel__nav--left {
+	.tec-events-carousel__nav--left {
 		left: 0;
 		border-radius: 0 var(--tec-card-radius) var(--tec-card-radius) 0;
 	}
 
-	.telex-events-carousel__nav--right {
+	.tec-events-carousel__nav--right {
 		right: 0;
 		border-radius: var(--tec-card-radius) 0 0 var(--tec-card-radius);
 	}
 
 	/* Gradient edges */
-	.telex-events-carousel__track-wrapper::before,
-	.telex-events-carousel__track-wrapper::after {
+	.tec-events-carousel__track-wrapper::before,
+	.tec-events-carousel__track-wrapper::after {
 		content: "";
 		position: absolute;
 		top: 0;
@@ -255,54 +255,54 @@
 		pointer-events: none;
 	}
 
-	.telex-events-carousel__track-wrapper::before {
+	.tec-events-carousel__track-wrapper::before {
 		left: 0;
 		background: linear-gradient(to right, var(--tec-bg), transparent);
 	}
 
-	.telex-events-carousel__track-wrapper::after {
+	.tec-events-carousel__track-wrapper::after {
 		right: 0;
 		background: linear-gradient(to left, var(--tec-bg), transparent);
 	}
 
 	/* Responsive */
 	@media (max-width: 900px) {
-		.telex-events-carousel__title {
+		.tec-events-carousel__title {
 			margin-left: 1.5rem;
 		}
 
-		.telex-events-carousel__track-wrapper {
+		.tec-events-carousel__track-wrapper {
 			padding: 0 1.5rem;
 		}
 	}
 
 	/* Touch devices: persistent mini-overlay + tap-to-reveal */
 	@media (hover: none) and (pointer: coarse) {
-		.telex-events-carousel__card:hover {
+		.tec-events-carousel__card:hover {
 			transform: none;
 			z-index: 1;
 		}
 
-		.telex-events-carousel__card:hover .telex-events-carousel__card-image img {
+		.tec-events-carousel__card:hover .tec-events-carousel__card-image img {
 			filter: none;
 		}
 
-		.telex-events-carousel__card:hover .telex-events-carousel__card-overlay {
+		.tec-events-carousel__card:hover .tec-events-carousel__card-overlay {
 			opacity: 0;
 			transform: translateY(8px);
 		}
 
-		.telex-events-carousel__card.is-tapped {
+		.tec-events-carousel__card.is-tapped {
 			transform: scale(1.25);
 			z-index: 10;
 		}
 
-		.telex-events-carousel__card.is-tapped .telex-events-carousel__card-image img {
+		.tec-events-carousel__card.is-tapped .tec-events-carousel__card-image img {
 			filter: brightness(0.4);
 		}
 
 		/* Always show a compact bottom gradient with title */
-		.telex-events-carousel__card-overlay {
+		.tec-events-carousel__card-overlay {
 			top: auto;
 			bottom: 0;
 			padding: 0.5rem 0.6rem;
@@ -316,17 +316,17 @@
 			pointer-events: auto;
 		}
 
-		.telex-events-carousel__card-overlay .telex-events-carousel__card-name {
+		.tec-events-carousel__card-overlay .tec-events-carousel__card-name {
 			-webkit-line-clamp: 1;
 		}
 
-		.telex-events-carousel__card-overlay .telex-events-carousel__card-excerpt,
-		.telex-events-carousel__card-overlay .telex-events-carousel__card-venue {
+		.tec-events-carousel__card-overlay .tec-events-carousel__card-excerpt,
+		.tec-events-carousel__card-overlay .tec-events-carousel__card-venue {
 			display: none;
 		}
 
 		/* When tapped: full overlay with all details */
-		.telex-events-carousel__card.is-tapped .telex-events-carousel__card-overlay {
+		.tec-events-carousel__card.is-tapped .tec-events-carousel__card-overlay {
 			top: 0;
 			padding: 0.75rem;
 			background: rgba(0, 0, 0, 0.75);
@@ -337,42 +337,42 @@
 			text-align: center;
 		}
 
-		.telex-events-carousel__card.is-tapped .telex-events-carousel__card-overlay .telex-events-carousel__card-name {
+		.tec-events-carousel__card.is-tapped .tec-events-carousel__card-overlay .tec-events-carousel__card-name {
 			-webkit-line-clamp: 2;
 		}
 
-		.telex-events-carousel__card.is-tapped .telex-events-carousel__card-overlay .telex-events-carousel__card-excerpt,
-		.telex-events-carousel__card.is-tapped .telex-events-carousel__card-overlay .telex-events-carousel__card-venue {
+		.tec-events-carousel__card.is-tapped .tec-events-carousel__card-overlay .tec-events-carousel__card-excerpt,
+		.tec-events-carousel__card.is-tapped .tec-events-carousel__card-overlay .tec-events-carousel__card-venue {
 			display: block;
 		}
 
 		/* Navigation arrows always visible on touch */
-		.telex-events-carousel__nav {
+		.tec-events-carousel__nav {
 			opacity: 1;
 		}
 	}
 
 	@media (max-width: 600px) {
-		.telex-events-carousel__card {
+		.tec-events-carousel__card {
 			flex: 0 0 9rem;
 			min-width: 8rem;
 		}
 
-		.telex-events-carousel__card-image {
+		.tec-events-carousel__card-image {
 			width: 9rem;
 			height: 12.6rem;
 		}
 
-		.telex-events-carousel__title {
+		.tec-events-carousel__title {
 			margin-left: 1rem;
 			font-size: 1.2rem;
 		}
 
-		.telex-events-carousel__track-wrapper {
+		.tec-events-carousel__track-wrapper {
 			padding: 0 1rem;
 		}
 
-		.telex-events-carousel__nav {
+		.tec-events-carousel__nav {
 			width: 2rem;
 			font-size: 1.25rem;
 		}

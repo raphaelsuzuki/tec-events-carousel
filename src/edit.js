@@ -1,6 +1,7 @@
 
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import apiFetch from '@wordpress/api-fetch';
 import {
 	PanelBody,
 	RangeControl,
@@ -30,22 +31,43 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const [ tribeActive, setTribeActive ] = useState( true );
 
-	// Fetch available event categories.
-	const eventCategoryTerms = useSelect( ( select ) => {
-		return select( 'core' ).getEntityRecords( 'taxonomy', 'tribe_events_cat', {
-			per_page: 100,
-			orderby: 'name',
-			order: 'asc',
-		} );
-	}, [] );
+	const [ eventCategoryTerms, setEventCategoryTerms ] = useState( null );
+	const [ tagTerms, setTagTerms ] = useState( null );
+	const [ eventCategoryError, setEventCategoryError ] = useState( false );
+	const [ tagError, setTagError ] = useState( false );
 
-	// Fetch available tags.
-	const tagTerms = useSelect( ( select ) => {
-		return select( 'core' ).getEntityRecords( 'taxonomy', 'post_tag', {
-			per_page: 100,
-			orderby: 'name',
-			order: 'asc',
-		} );
+	// Fetch taxonomy terms directly so REST failures can end the loading state.
+	useEffect( () => {
+		let cancelled = false;
+		const query = '?per_page=100&orderby=name&order=asc';
+
+		apiFetch( { path: `/wp/v2/tribe_events_cat${ query }` } )
+			.then( ( terms ) => {
+				if ( ! cancelled ) {
+					setEventCategoryTerms( terms );
+				}
+			} )
+			.catch( () => {
+				if ( ! cancelled ) {
+					setEventCategoryError( true );
+				}
+			} );
+
+		apiFetch( { path: `/wp/v2/tags${ query }` } )
+			.then( ( terms ) => {
+				if ( ! cancelled ) {
+					setTagTerms( terms );
+				}
+			} )
+			.catch( () => {
+				if ( ! cancelled ) {
+					setTagError( true );
+				}
+			} );
+
+		return () => {
+			cancelled = true;
+		};
 	}, [] );
 
 	// Build lookup maps for token fields.
@@ -133,7 +155,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	}, [ events ] );
 
 	const blockProps = useBlockProps( {
-		className: 'telex-events-carousel-editor',
+		className: 'tec-events-carousel-editor',
 		style: { '--tec-accent': accentColor },
 	} );
 
@@ -180,13 +202,13 @@ export default function Edit( { attributes, setAttributes } ) {
 		<>
 			<InspectorControls>
 				<PanelBody
-					title={ __( 'Carousel Settings', 'telex-events-carousel' ) }
+					title={ __( 'Carousel Settings', 'tec-events-carousel' ) }
 					initialOpen={ true }
 				>
 					<TextControl
 						__nextHasNoMarginBottom
 						__next40pxDefaultSize
-						label={ __( 'Section Title', 'telex-events-carousel' ) }
+						label={ __( 'Section Title', 'tec-events-carousel' ) }
 						value={ sectionTitle }
 						onChange={ ( value ) =>
 							setAttributes( { sectionTitle: value } )
@@ -195,7 +217,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					<RangeControl
 						__nextHasNoMarginBottom
 						__next40pxDefaultSize
-						label={ __( 'Number of Events', 'telex-events-carousel' ) }
+						label={ __( 'Number of Events', 'tec-events-carousel' ) }
 						value={ numberOfEvents }
 						onChange={ ( value ) =>
 							setAttributes( { numberOfEvents: value } )
@@ -206,15 +228,15 @@ export default function Edit( { attributes, setAttributes } ) {
 					<SelectControl
 						__nextHasNoMarginBottom
 						__next40pxDefaultSize
-						label={ __( 'Event Order', 'telex-events-carousel' ) }
+						label={ __( 'Event Order', 'tec-events-carousel' ) }
 						value={ eventOrder }
 						options={ [
 							{
-								label: __( 'Upcoming', 'telex-events-carousel' ),
+								label: __( 'Upcoming', 'tec-events-carousel' ),
 								value: 'upcoming',
 							},
 							{
-								label: __( 'Past', 'telex-events-carousel' ),
+								label: __( 'Past', 'tec-events-carousel' ),
 								value: 'past',
 							},
 						] }
@@ -224,23 +246,27 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 				<PanelBody
-					title={ __( 'Filter by Taxonomy', 'telex-events-carousel' ) }
+					title={ __( 'Filter by Taxonomy', 'tec-events-carousel' ) }
 					initialOpen={ false }
 				>
-					{ eventCategoryTerms === null || eventCategoryTerms === undefined ? (
+					{ eventCategoryError ? (
+						<p>
+							{ __( 'Event categories could not be loaded. Check the REST API or your permissions.', 'tec-events-carousel' ) }
+						</p>
+					) : eventCategoryTerms === null || eventCategoryTerms === undefined ? (
 						<p style={ { display: 'flex', alignItems: 'center', gap: '8px' } }>
 							<Spinner />
-							{ __( 'Loading categories…', 'telex-events-carousel' ) }
+							{ __( 'Loading categories…', 'tec-events-carousel' ) }
 						</p>
 					) : eventCategoryTerms.length === 0 ? (
 						<p style={ { color: '#757575', fontStyle: 'italic' } }>
-							{ __( 'No event categories found.', 'telex-events-carousel' ) }
+							{ __( 'No event categories found.', 'tec-events-carousel' ) }
 						</p>
 					) : (
 						<FormTokenField
 							__nextHasNoMarginBottom
 							__next40pxDefaultSize
-							label={ __( 'Event Categories', 'telex-events-carousel' ) }
+							label={ __( 'Event Categories', 'tec-events-carousel' ) }
 							value={ selectedCategoryNames }
 							suggestions={ categoryNames }
 							onChange={ ( tokens ) => {
@@ -257,20 +283,24 @@ export default function Edit( { attributes, setAttributes } ) {
 							__experimentalExpandOnFocus
 						/>
 					) }
-					{ tagTerms === null || tagTerms === undefined ? (
+					{ tagError ? (
+						<p>
+							{ __( 'Tags could not be loaded. Check the REST API or your permissions.', 'tec-events-carousel' ) }
+						</p>
+					) : tagTerms === null || tagTerms === undefined ? (
 						<p style={ { display: 'flex', alignItems: 'center', gap: '8px' } }>
 							<Spinner />
-							{ __( 'Loading tags…', 'telex-events-carousel' ) }
+							{ __( 'Loading tags…', 'tec-events-carousel' ) }
 						</p>
 					) : tagTerms.length === 0 ? (
 						<p style={ { color: '#757575', fontStyle: 'italic' } }>
-							{ __( 'No tags found.', 'telex-events-carousel' ) }
+							{ __( 'No tags found.', 'tec-events-carousel' ) }
 						</p>
 					) : (
 						<FormTokenField
 							__nextHasNoMarginBottom
 							__next40pxDefaultSize
-							label={ __( 'Event Tags', 'telex-events-carousel' ) }
+							label={ __( 'Event Tags', 'tec-events-carousel' ) }
 							value={ selectedTagNames }
 							suggestions={ tagNames }
 							onChange={ ( tokens ) => {
@@ -289,12 +319,12 @@ export default function Edit( { attributes, setAttributes } ) {
 					) }
 				</PanelBody>
 				<PanelBody
-					title={ __( 'Display Options', 'telex-events-carousel' ) }
+					title={ __( 'Display Options', 'tec-events-carousel' ) }
 					initialOpen={ false }
 				>
 					<ToggleControl
 						__nextHasNoMarginBottom
-						label={ __( 'Show Date', 'telex-events-carousel' ) }
+						label={ __( 'Show Date', 'tec-events-carousel' ) }
 						checked={ showDate }
 						onChange={ ( value ) =>
 							setAttributes( { showDate: value } )
@@ -302,7 +332,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 					<ToggleControl
 						__nextHasNoMarginBottom
-						label={ __( 'Show Venue', 'telex-events-carousel' ) }
+						label={ __( 'Show Venue', 'tec-events-carousel' ) }
 						checked={ showVenue }
 						onChange={ ( value ) =>
 							setAttributes( { showVenue: value } )
@@ -310,7 +340,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 					<ToggleControl
 						__nextHasNoMarginBottom
-						label={ __( 'Show Excerpt', 'telex-events-carousel' ) }
+						label={ __( 'Show Excerpt', 'tec-events-carousel' ) }
 						checked={ showExcerpt }
 						onChange={ ( value ) =>
 							setAttributes( { showExcerpt: value } )
@@ -318,7 +348,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 				</PanelBody>
 				<PanelBody
-					title={ __( 'Accent Color', 'telex-events-carousel' ) }
+					title={ __( 'Accent Color', 'tec-events-carousel' ) }
 					initialOpen={ false }
 				>
 					<ColorPicker
@@ -332,48 +362,48 @@ export default function Edit( { attributes, setAttributes } ) {
 			</InspectorControls>
 			<div { ...blockProps }>
 				{ sectionTitle && (
-					<h2 className="telex-events-carousel__title">
+					<h2 className="tec-events-carousel__title">
 						{ sectionTitle }
 					</h2>
 				) }
 				{ ! tribeActive && (
-					<div className="telex-events-carousel__notice">
+					<div className="tec-events-carousel__notice">
 						<p>
 							{ __(
 								'The Events Calendar plugin is required. Please install and activate it to display events.',
-								'telex-events-carousel'
+								'tec-events-carousel'
 							) }
 						</p>
 					</div>
 				) }
 				{ tribeActive && ! events && (
-					<div className="telex-events-carousel__loading">
+					<div className="tec-events-carousel__loading">
 						<p>
-							{ __( 'Loading events…', 'telex-events-carousel' ) }
+							{ __( 'Loading events…', 'tec-events-carousel' ) }
 						</p>
 					</div>
 				) }
 				{ tribeActive && events && events.length === 0 && (
-					<div className="telex-events-carousel__notice">
+					<div className="tec-events-carousel__notice">
 						<p>
 							{ __(
 								'No events found. Create some events in The Events Calendar to see them here.',
-								'telex-events-carousel'
+								'tec-events-carousel'
 							) }
 						</p>
 					</div>
 				) }
 				{ tribeActive && events && events.length > 0 && (
-					<div className="telex-events-carousel__track-wrapper">
-						<div className="telex-events-carousel__track">
+					<div className="tec-events-carousel__track-wrapper">
+						<div className="tec-events-carousel__track">
 							{ events.map( ( event ) => {
 								const imageUrl = getFeaturedImage( event );
 								return (
 									<div
-										className="telex-events-carousel__card"
+										className="tec-events-carousel__card"
 										key={ event.id }
 									>
-										<div className="telex-events-carousel__card-image">
+										<div className="tec-events-carousel__card-image">
 											{ imageUrl ? (
 												<img
 													src={ imageUrl }
@@ -383,20 +413,20 @@ export default function Edit( { attributes, setAttributes } ) {
 													}
 												/>
 											) : (
-												<div className="telex-events-carousel__card-placeholder">
-													<span>{ __( '📅', 'telex-events-carousel' ) }</span>
+												<div className="tec-events-carousel__card-placeholder">
+													<span>{ __( '📅', 'tec-events-carousel' ) }</span>
 												</div>
 											) }
-											<div className="telex-events-carousel__card-overlay">
+											<div className="tec-events-carousel__card-overlay">
 												{ showDate && event.date && (
-													<span className="telex-events-carousel__card-date">
+													<span className="tec-events-carousel__card-date">
 														{ formatDate(
 															event.date
 														) }
 													</span>
 												) }
 												<h3
-													className="telex-events-carousel__card-name"
+													className="tec-events-carousel__card-name"
 													dangerouslySetInnerHTML={ {
 														__html: event.title
 															.rendered,
@@ -405,15 +435,15 @@ export default function Edit( { attributes, setAttributes } ) {
 												{ showVenue &&
 													event.meta &&
 													event.meta._EventVenueID && (
-														<span className="telex-events-carousel__card-venue">
+														<span className="tec-events-carousel__card-venue">
 															{ __(
 																'📍 Venue',
-																'telex-events-carousel'
+																'tec-events-carousel'
 															) }
 														</span>
 													) }
 												{ showExcerpt && (
-													<p className="telex-events-carousel__card-excerpt">
+													<p className="tec-events-carousel__card-excerpt">
 														{ getExcerpt(
 															event
 														) }

@@ -1,9 +1,9 @@
 
   {
-	"name": "telex-events-carousel",
-	"version": "0.1.0",
+	"name": "tec-events-carousel",
+	"version": "0.1.1",
 	"description": "A Netflix-inspired carousel block that displays events from The Events Calendar plugin with smooth animations and hover effects.",
-	"author": "WordPress Telex",
+	"author": "Raphael Suzuki",
 	"license": "GPL-2.0-or-later",
 	"main": "build/index.js",
 	"scripts": {

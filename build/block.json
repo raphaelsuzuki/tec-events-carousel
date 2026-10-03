@@ -1,8 +1,8 @@
 {
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
-  "name": "telex/block-telex-events-carousel",
-  "version": "0.1.0",
+  "name": "tec-events-carousel/carousel",
+  "version": "0.1.1",
   "title": "Events Calendar Carousel",
   "category": "widgets",
   "icon": "calendar-alt",
@@ -63,7 +63,7 @@
       "padding": true
     }
   },
-  "textdomain": "telex-events-carousel",
+  "textdomain": "tec-events-carousel",
   "editorScript": "file:./index.js",
   "editorStyle": "file:./index.css",
   "style": "file:./style-index.css",
