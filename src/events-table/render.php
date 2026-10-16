@@ -8,6 +8,7 @@
  */
 
 $number_of_events = isset( $attributes['numberOfEvents'] ) ? min( 20, max( 1, absint( $attributes['numberOfEvents'] ) ) ) : 6;
+$event_offset     = isset( $attributes['eventOffset'] ) ? absint( $attributes['eventOffset'] ) : 0;
 $event_order      = isset( $attributes['eventOrder'] ) ? sanitize_text_field( $attributes['eventOrder'] ) : 'upcoming';
 $section_title    = isset( $attributes['sectionTitle'] ) ? sanitize_text_field( $attributes['sectionTitle'] ) : '';
 $event_categories = ! empty( $attributes['eventCategories'] ) ? array_map( 'absint', (array) $attributes['eventCategories'] ) : array();
@@ -28,7 +29,7 @@ $query_args = array(
 	'post_type'      => 'tribe_events',
 	'post_status'    => 'publish',
 	'posts_per_page' => $number_of_events,
-	'no_found_rows'  => true,
+	'offset'         => $event_offset,
 );
 
 $tax_query = array();
@@ -101,6 +102,7 @@ if ( 'past' === $event_order ) {
 }
 
 $events_query = new WP_Query( $query_args );
+$total_events = max( 0, (int) $events_query->found_posts - $event_offset );
 $calendar_url = function_exists( 'tribe_get_events_link' ) ? tribe_get_events_link() : get_post_type_archive_link( 'tribe_events' );
 ?>
 <div <?php echo get_block_wrapper_attributes(); ?>>
@@ -108,9 +110,7 @@ $calendar_url = function_exists( 'tribe_get_events_link' ) ? tribe_get_events_li
 		<div>
 			<h2 class="tec-events-table__title">
 				<?php echo esc_html( $section_title ); ?>
-				<?php if ( $events_query->post_count > 0 ) : ?>
-					<span>[<?php echo esc_html( (string) $events_query->post_count ); ?> <?php esc_html_e( 'CONFIRMED DATES', 'tec-events-carousel' ); ?>]</span>
-				<?php endif; ?>
+				<span>[<?php echo esc_html( (string) $total_events ); ?> <?php esc_html_e( 'CONFIRMED DATES', 'tec-events-carousel' ); ?>]</span>
 			</h2>
 		</div>
 		<?php if ( $calendar_url ) : ?>

@@ -1,7 +1,7 @@
 
   {
 	"name": "tec-events-carousel",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "A Netflix-inspired carousel block that displays events from The Events Calendar plugin with smooth animations and hover effects.",
 	"author": "Raphael Suzuki",
 	"license": "GPL-2.0-or-later",
