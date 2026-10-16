@@ -152,11 +152,7 @@ $wrapper_attributes = get_block_wrapper_attributes( array(
 					}
 
 					$has_tickets = function_exists( 'tribe_events_has_tickets' ) && tribe_events_has_tickets( $event_id );
-
-					$thumbnail_url = get_the_post_thumbnail_url( $event_id, 'medium_large' );
-					if ( ! $thumbnail_url ) {
-						$thumbnail_url = get_the_post_thumbnail_url( $event_id, 'medium' );
-					}
+					$has_thumbnail = has_post_thumbnail( $event_id );
 
 					$formatted_date = '';
 					if ( $start_date ) {
@@ -169,13 +165,19 @@ $wrapper_attributes = get_block_wrapper_attributes( array(
 					?>
 					<a href="<?php echo esc_url( $event_link ); ?>" class="tec-events-carousel__card" aria-label="<?php echo esc_attr( get_the_title( $event_id ) ); ?>">
 						<div class="tec-events-carousel__card-image">
-							<?php if ( $thumbnail_url ) : ?>
-								<img
-									src="<?php echo esc_url( $thumbnail_url ); ?>"
-									alt="<?php echo esc_attr( get_the_title( $event_id ) ); ?>"
-									loading="lazy"
-									decoding="async"
-								/>
+							<?php if ( $has_thumbnail ) : ?>
+								<?php
+								echo get_the_post_thumbnail(
+									$event_id,
+									'medium',
+									array(
+										'alt'      => get_the_title( $event_id ),
+										'sizes'    => '(max-width: 600px) 144px, 180px',
+										'loading'  => 'lazy',
+										'decoding' => 'async',
+									)
+								);
+								?>
 							<?php else : ?>
 								<div class="tec-events-carousel__card-placeholder">
 									<span>📅</span>
