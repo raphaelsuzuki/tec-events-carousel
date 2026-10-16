@@ -69,6 +69,7 @@ function getEventTaxonomySubtitle( event, categoriesById, tagsById ) {
 export default function Edit( { attributes, setAttributes } ) {
 	const {
 		numberOfEvents,
+		eventOffset,
 		eventOrder,
 		eventCategories,
 		eventTags,
@@ -101,11 +102,12 @@ export default function Edit( { attributes, setAttributes } ) {
 		};
 	}, [] );
 
-	const { events, tribeActive } = useSelect(
+	const { events, tribeActive, totalEvents } = useSelect(
 		( select ) => {
 			const core = select( 'core' );
 			const query = {
 				per_page: numberOfEvents,
+				offset: eventOffset,
 				status: 'publish',
 				orderby: 'date',
 				order: eventOrder === 'upcoming' ? 'asc' : 'desc',
@@ -119,6 +121,11 @@ export default function Edit( { attributes, setAttributes } ) {
 			}
 
 			const records = core.getEntityRecords(
+				'postType',
+				'tribe_events',
+				query
+			);
+			const totalItems = core.getEntityRecordsTotalItems(
 				'postType',
 				'tribe_events',
 				query
@@ -142,10 +149,14 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			return {
 				events: records === null ? null : eventsWithVenues,
+				totalEvents:
+					typeof totalItems === 'number'
+						? Math.max( 0, totalItems - eventOffset )
+						: null,
 				tribeActive: Boolean( core.getPostType( 'tribe_events' ) ),
 			};
 		},
-		[ numberOfEvents, eventOrder, eventCategories, eventTags ]
+		[ numberOfEvents, eventOffset, eventOrder, eventCategories, eventTags ]
 	);
 
 	const blockProps = useBlockProps( {
@@ -200,6 +211,15 @@ export default function Edit( { attributes, setAttributes } ) {
 						max={ 20 }
 						onChange={ ( value ) =>
 							setAttributes( { numberOfEvents: value } )
+						}
+					/>
+					<RangeControl
+						label={ __( 'Skip Events', 'tec-events-carousel' ) }
+						value={ eventOffset }
+						min={ 0 }
+						max={ 100 }
+						onChange={ ( value ) =>
+							setAttributes( { eventOffset: value } )
 						}
 					/>
 					<SelectControl
@@ -277,10 +297,10 @@ export default function Edit( { attributes, setAttributes } ) {
 					<div>
 						<h2 className="tec-events-table__title">
 							{ sectionTitle }
-							{ events?.length > 0 && (
+							{ typeof totalEvents === 'number' && (
 								<span>
 									[
-									{ events.length }{ ' ' }
+									{ totalEvents }{ ' ' }
 									{ __(
 										'CONFIRMED DATES',
 										'tec-events-carousel'

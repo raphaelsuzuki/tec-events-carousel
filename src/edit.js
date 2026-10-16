@@ -19,6 +19,7 @@ import './editor.scss';
 export default function Edit( { attributes, setAttributes } ) {
 	const {
 		numberOfEvents,
+		eventOffset,
 		eventOrder,
 		showDate,
 		showVenue,
@@ -119,6 +120,7 @@ export default function Edit( { attributes, setAttributes } ) {
 			const { getEntityRecords, getEntityRecord } = select( 'core' );
 			const query = {
 				per_page: numberOfEvents,
+				offset: eventOffset,
 				_embed: true,
 				status: 'publish',
 			};
@@ -153,7 +155,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				};
 			} );
 		},
-		[ numberOfEvents, eventOrder, eventCategories, eventTags ]
+		[ numberOfEvents, eventOffset, eventOrder, eventCategories, eventTags ]
 	);
 
 	useEffect( () => {
@@ -224,6 +226,17 @@ export default function Edit( { attributes, setAttributes } ) {
 						}
 						min={ 1 }
 						max={ 20 }
+					/>
+					<RangeControl
+						__nextHasNoMarginBottom
+						__next40pxDefaultSize
+						label={ __( 'Skip Events', 'tec-events-carousel' ) }
+						value={ eventOffset }
+						onChange={ ( value ) =>
+							setAttributes( { eventOffset: value } )
+						}
+						min={ 0 }
+						max={ 100 }
 					/>
 					<SelectControl
 						__nextHasNoMarginBottom

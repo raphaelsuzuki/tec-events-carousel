@@ -10,6 +10,7 @@
  */
 
 $number_of_events = isset( $attributes['numberOfEvents'] ) ? absint( $attributes['numberOfEvents'] ) : 8;
+$event_offset     = isset( $attributes['eventOffset'] ) ? absint( $attributes['eventOffset'] ) : 0;
 $event_order      = isset( $attributes['eventOrder'] ) ? sanitize_text_field( $attributes['eventOrder'] ) : 'upcoming';
 $show_date        = isset( $attributes['showDate'] ) ? (bool) $attributes['showDate'] : true;
 $show_venue       = isset( $attributes['showVenue'] ) ? (bool) $attributes['showVenue'] : true;
@@ -34,6 +35,7 @@ $query_args = array(
 	'post_type'      => 'tribe_events',
 	'post_status'    => 'publish',
 	'posts_per_page' => $number_of_events,
+	'offset'         => $event_offset,
 	'no_found_rows'  => true,
 );
 
