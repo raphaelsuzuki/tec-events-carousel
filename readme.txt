@@ -1,4 +1,4 @@
-=== Events Calendar Carousel ===
+=== The Events Calendar Blocks ===
 
 Contributors:      WordPress
 Tags:              block, events, carousel, the events calendar, netflix
@@ -7,11 +7,11 @@ Stable tag:        0.1.1
 License:           GPLv2 or later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
-A Netflix-inspired carousel block that displays events from The Events Calendar plugin in a sleek, horizontally scrollable row with smooth animations and hover effects.
+The Events Calendar Blocks provides Gutenberg blocks for displaying events as a carousel or a responsive table.
 
 == Description ==
 
-Events Calendar Carousel brings a cinematic, Netflix-style browsing experience to your WordPress events. It integrates seamlessly with The Events Calendar plugin by Modern Tribe, pulling upcoming (or past) events and presenting them as visually rich cards in a horizontally scrollable carousel.
+The Events Calendar Blocks integrates with The Events Calendar plugin to display upcoming or past events in a carousel or a responsive table.
 
 **Features:**
 

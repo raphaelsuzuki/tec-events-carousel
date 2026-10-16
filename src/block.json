@@ -25,10 +25,6 @@
       "type": "boolean",
       "default": true
     },
-    "showExcerpt": {
-      "type": "boolean",
-      "default": true
-    },
     "accentColor": {
       "type": "string",
       "default": "#e50914"

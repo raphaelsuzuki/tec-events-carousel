@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name:       Events Calendar Carousel
- * Description:       A Netflix-inspired carousel block that displays events from The Events Calendar plugin with smooth animations and hover effects.
+ * Plugin Name:       The Events Calendar Blocks
+ * Description:       Gutenberg blocks for displaying events from The Events Calendar.
  * Version:           0.1.1
  * Requires at least: 6.4
  * Requires PHP:      7.4
@@ -37,6 +37,7 @@ add_filter( 'register_taxonomy_args', 'events_carousel_enable_taxonomy_rest', 10
 if ( ! function_exists( 'events_carousel_block_init' ) ) {
 	function events_carousel_block_init(): void {
 		register_block_type( __DIR__ . '/build/' );
+		register_block_type( __DIR__ . '/build/events-table/' );
 	}
 }
 add_action( 'init', 'events_carousel_block_init' );

@@ -22,7 +22,6 @@ export default function Edit( { attributes, setAttributes } ) {
 		eventOrder,
 		showDate,
 		showVenue,
-		showExcerpt,
 		accentColor,
 		sectionTitle,
 		eventCategories,
@@ -117,7 +116,7 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const events = useSelect(
 		( select ) => {
-			const { getEntityRecords } = select( 'core' );
+			const { getEntityRecords, getEntityRecord } = select( 'core' );
 			const query = {
 				per_page: numberOfEvents,
 				_embed: true,
@@ -141,7 +140,18 @@ export default function Edit( { attributes, setAttributes } ) {
 			}
 
 			const records = getEntityRecords( 'postType', 'tribe_events', query );
-			return records;
+			return records?.map( ( event ) => {
+				const venueId = Number( event.meta?._EventVenueID );
+				const venue = venueId
+					? getEntityRecord( 'postType', 'tribe_venue', venueId )
+					: null;
+
+				return {
+					...event,
+					previewVenue: venue?.title?.rendered || '',
+					previewVenueCity: venue?.meta?._VenueCity || '',
+				};
+			} );
 		},
 		[ numberOfEvents, eventOrder, eventCategories, eventTags ]
 	);
@@ -166,16 +176,6 @@ export default function Edit( { attributes, setAttributes } ) {
 		const date = new Date( dateString );
 		const options = { month: 'short', day: 'numeric', year: 'numeric' };
 		return date.toLocaleDateString( 'en-US', options );
-	};
-
-	const getExcerpt = ( event ) => {
-		if ( event.excerpt && event.excerpt.rendered ) {
-			const div = document.createElement( 'div' );
-			div.innerHTML = event.excerpt.rendered;
-			const text = div.textContent || div.innerText || '';
-			return text.length > 100 ? text.substring( 0, 100 ) + '…' : text;
-		}
-		return '';
 	};
 
 	const getFeaturedImage = ( event ) => {
@@ -338,14 +338,6 @@ export default function Edit( { attributes, setAttributes } ) {
 							setAttributes( { showVenue: value } )
 						}
 					/>
-					<ToggleControl
-						__nextHasNoMarginBottom
-						label={ __( 'Show Excerpt', 'tec-events-carousel' ) }
-						checked={ showExcerpt }
-						onChange={ ( value ) =>
-							setAttributes( { showExcerpt: value } )
-						}
-					/>
 				</PanelBody>
 				<PanelBody
 					title={ __( 'Accent Color', 'tec-events-carousel' ) }
@@ -432,22 +424,11 @@ export default function Edit( { attributes, setAttributes } ) {
 															.rendered,
 													} }
 												/>
-												{ showVenue &&
-													event.meta &&
-													event.meta._EventVenueID && (
-														<span className="tec-events-carousel__card-venue">
-															{ __(
-																'📍 Venue',
-																'tec-events-carousel'
-															) }
-														</span>
-													) }
-												{ showExcerpt && (
-													<p className="tec-events-carousel__card-excerpt">
-														{ getExcerpt(
-															event
-														) }
-													</p>
+												{ showVenue && event.previewVenue && (
+													<span className="tec-events-carousel__card-venue">
+														📍 { event.previewVenue }
+														{ event.previewVenueCity && `, ${ event.previewVenueCity }` }
+													</span>
 												) }
 											</div>
 										</div>

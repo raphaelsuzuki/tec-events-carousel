@@ -13,7 +13,6 @@ $number_of_events = isset( $attributes['numberOfEvents'] ) ? absint( $attributes
 $event_order      = isset( $attributes['eventOrder'] ) ? sanitize_text_field( $attributes['eventOrder'] ) : 'upcoming';
 $show_date        = isset( $attributes['showDate'] ) ? (bool) $attributes['showDate'] : true;
 $show_venue       = isset( $attributes['showVenue'] ) ? (bool) $attributes['showVenue'] : true;
-$show_excerpt     = isset( $attributes['showExcerpt'] ) ? (bool) $attributes['showExcerpt'] : true;
 $accent_color     = isset( $attributes['accentColor'] ) ? sanitize_hex_color( $attributes['accentColor'] ) : '#e50914';
 $section_title    = isset( $attributes['sectionTitle'] ) ? sanitize_text_field( $attributes['sectionTitle'] ) : '';
 $event_categories = ! empty( $attributes['eventCategories'] ) ? array_map( 'absint', (array) $attributes['eventCategories'] ) : array();
@@ -140,15 +139,19 @@ $wrapper_attributes = get_block_wrapper_attributes( array(
 					$event_id   = get_the_ID();
 					$event_link = get_permalink( $event_id );
 					$start_date = get_post_meta( $event_id, '_EventStartDate', true );
-					$venue_id   = get_post_meta( $event_id, '_EventVenueID', true );
+					$venue_id   = absint( get_post_meta( $event_id, '_EventVenueID', true ) );
 					$venue_name = '';
+					$venue_city = '';
 
 					if ( $venue_id ) {
-						$venue_post = get_post( absint( $venue_id ) );
+						$venue_post = get_post( $venue_id );
 						if ( $venue_post ) {
 							$venue_name = $venue_post->post_title;
+							$venue_city = get_post_meta( $venue_id, '_VenueCity', true );
 						}
 					}
+
+					$has_tickets = function_exists( 'tribe_events_has_tickets' ) && tribe_events_has_tickets( $event_id );
 
 					$thumbnail_url = get_the_post_thumbnail_url( $event_id, 'medium_large' );
 					if ( ! $thumbnail_url ) {
@@ -163,10 +166,6 @@ $wrapper_attributes = get_block_wrapper_attributes( array(
 						}
 					}
 
-					$excerpt = get_the_excerpt( $event_id );
-					if ( strlen( $excerpt ) > 100 ) {
-						$excerpt = substr( $excerpt, 0, 100 ) . '…';
-					}
 					?>
 					<a href="<?php echo esc_url( $event_link ); ?>" class="tec-events-carousel__card" aria-label="<?php echo esc_attr( get_the_title( $event_id ) ); ?>">
 						<div class="tec-events-carousel__card-image">
@@ -188,10 +187,12 @@ $wrapper_attributes = get_block_wrapper_attributes( array(
 								<?php endif; ?>
 								<h3 class="tec-events-carousel__card-name"><?php echo esc_html( get_the_title( $event_id ) ); ?></h3>
 								<?php if ( $show_venue && $venue_name ) : ?>
-									<span class="tec-events-carousel__card-venue">📍 <?php echo esc_html( $venue_name ); ?></span>
+									<span class="tec-events-carousel__card-venue">
+										📍 <?php echo esc_html( $venue_name ); ?><?php if ( $venue_city ) : ?>, <?php echo esc_html( $venue_city ); ?><?php endif; ?>
+								</span>
 								<?php endif; ?>
-								<?php if ( $show_excerpt && $excerpt ) : ?>
-									<p class="tec-events-carousel__card-excerpt"><?php echo esc_html( $excerpt ); ?></p>
+								<?php if ( $has_tickets ) : ?>
+									<span class="tec-events-carousel__ticket-cta"><?php esc_html_e( 'Get Tickets', 'tec-events-carousel' ); ?></span>
 								<?php endif; ?>
 							</div>
 						</div>
