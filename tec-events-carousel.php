@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       The Events Calendar Blocks
  * Description:       Gutenberg blocks for displaying events from The Events Calendar.
- * Version:           0.3.0
+ * Version:           0.3.1
  * Requires at least: 6.4
  * Requires PHP:      7.4
  * Author:            Raphael Suzuki
