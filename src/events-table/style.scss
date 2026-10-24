@@ -218,6 +218,37 @@
 			}
 		}
 
+		tbody td:nth-child(1),
+		tbody td:nth-child(3),
+		tbody td:nth-child(4),
+		tbody td:nth-child(5) {
+			align-items: baseline;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.25rem 0.5rem;
+
+			&::before {
+				display: inline;
+				margin: 0;
+			}
+		}
+
+		tbody td:first-child time {
+			align-items: baseline;
+			display: inline-flex;
+			flex-wrap: wrap;
+			gap: 0.25rem;
+		}
+
+		tbody td:first-child span {
+			display: inline;
+		}
+
+		.tec-events-table__city {
+			display: inline;
+			margin: 0;
+		}
+
 		.tec-events-table__button {
 			max-width: 100%;
 			text-align: center;
